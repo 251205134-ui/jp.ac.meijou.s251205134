@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        //setContentView(R.layout.activity_main);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -32,33 +31,37 @@ public class MainActivity extends AppCompatActivity {
         });
 
         prefDataStore = PrefDataStore.getInstance(this);
+        prefDataStore.getString("text")
+                        .ifPresent(text -> {
+                            if("あ".equals(text)){
+                                binding.textView.setText("Aの画像");
+                                binding.imageView.setImageResource(R.drawable.wifi);
+                            } else if ("い".equals(text)) {
+                                binding.textView.setText("Bの画像");
+                                binding.imageView.setImageResource(R.drawable.no_wifi);
+                            } else {
+                                binding.textView.setText("知らない画像");
+                            }
+
+                        });
 
         binding.changebutton.setOnClickListener(view -> {
             String text = binding.editTextText.getText().toString();
             binding.textView.setText(text);
+            if("あ".equals(text)){
+                binding.textView.setText("Aの画像");
+                binding.imageView.setImageResource(R.drawable.wifi);
+            } else if ("い".equals(text)) {
+                binding.textView.setText("Bの画像");
+                binding.imageView.setImageResource(R.drawable.no_wifi);
+            } else {
+                binding.textView.setText("知らない画像");
+            }
         });
 
         binding.savebutton.setOnClickListener(view -> {
             String text = binding.editTextText.getText().toString();
             prefDataStore.setString("text",text);
-        });
-
-        binding.editTextText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String text = editable.toString();
-                binding.textView.setText(text);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
         });
     }
 }
